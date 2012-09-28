@@ -22,23 +22,23 @@ class Package
     @stitch       = new Stitch(@paths)
     @modules      = @dependency.resolve().concat(@stitch.resolve())
     stitch(identifier: @identifier, modules: @modules)
-    
+
   compileLibs: ->
     (fs.readFileSync(path, 'utf8') for path in @libs).join("\n")
-    
+
   compile: (minify) ->
     result = [@compileLibs(), @compileModules()].join("\n")
-    result = uglify(result) if minify
+    result = uglify(result, mangle_options: {no_functions: true}) if minify
     result
-    
+
   createServer: ->
     (env, callback) =>
-      callback(200, 
+      callback(200,
         'Content-Type': 'text/javascript',
         @compile())
 
-module.exports = 
+module.exports =
   compilers:  compilers
   Package:    Package
-  createPackage: (config) -> 
+  createPackage: (config) ->
     new Package(config)

@@ -7,7 +7,7 @@ compilers    = require('./compilers')
 class Stitch
   constructor: (@paths = []) ->
     @paths = (npath.resolve(path) for path in @paths)
-  
+
   resolve: ->
     flatten(@walk(path) for path in @paths)
 
@@ -29,11 +29,11 @@ class Module
   constructor: (@filename, @parent) ->
     @ext = npath.extname(@filename).slice(1)
     @id  = modulerize(@filename.replace(npath.join(@parent, '/'), ''))
-    
+
   compile: ->
     compilers[@ext](@filename)
-    
+
   valid: ->
-    !!compilers[@ext]
-    
+    !!compilers[@ext] and @ext!='styl'
+
 module.exports = Stitch
